@@ -45,7 +45,7 @@
             </li>
 
             <li class="nav-item">
-                <nuxt-link class="nav-link" to="/login">
+                <nuxt-link class="nav-link" to="/login3">
                 Login
                 </nuxt-link>
             </li>
