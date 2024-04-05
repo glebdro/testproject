@@ -20,23 +20,21 @@ export default {
     // };
 
       try {
-        const response = await fetch('http://185.204.109.250:8000/api/v1/news/', {
-          method: 'GET',
-          credentials: 'include'
-          
-          // headers: {
-          //   'Content-Type': 'application/json',
-          //   'Authorization': `Bearer ${tokenData.access}`
-          // }
-        });
+        const response = await this.$axios.get('/api/v1/bgjobs/'); 
+        console.log('Response News [0]:', response); 
 
-        if (response.ok) {
-          const newsData = await response.json();
-          this.data = newsData;
-        } else {
-          console.error('Failed to fetch data:', response.status);
+        
+        // const newsData = await response.data;
+        // this.data = newsData;
+        // const response2 = await this.$axios.get('/api/v1/bgjobs/'); 
+        // console.log('Response BgJobs:', response2);
+
+        // const response3 = await this.$axios.get('/api/v1/news_analysis/'); 
+        // console.log('Response News Analysis.data:', response3.data[0]);
+        // console.log('Data:', newsData); 
+        // console.error('Failed to fetch data:', response.status);
           // Обработка ошибки, например, отображение сообщения пользователю
-        }
+        
       } catch (error) {
         console.error('Error:', error);
         // Обработка других ошибок, если они возникают

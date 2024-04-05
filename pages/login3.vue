@@ -31,7 +31,7 @@ export default {
         console.log('Response:', response.data); // выводится в консоль JWT токен
         console.log('Access Token:', accessToken); // выводится в консоль значение "access"  JWT токена
         // заголовок авторизации с токеном доступа (локальный для одного запроса) - 2 способ
-        const response2 = await this.$axios.get('/api/v1/news/', { // сразу же пытаюсь достать эндпоинт "news"
+        const response2 = await this.$axios.get('/api/v1/news_analysis/', { // сразу же пытаюсь достать эндпоинт "news"
           headers: {
             Authorization: `Bearer ${accessToken}`
           }

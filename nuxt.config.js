@@ -1,6 +1,6 @@
 export default {
   // Target: https://go.nuxtjs.dev/config-target
-  target: 'static',
+  target: 'server',
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -50,6 +50,7 @@ export default {
     // '@nuxtjs/auth-next',
   ],
   
+  loading: {color: '#3b8070'},
 
   axios: {
     baseURL: 'http://185.204.109.250:8000',
