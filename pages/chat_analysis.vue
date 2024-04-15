@@ -1,43 +1,45 @@
 <template>
-    <div>
-        <button @click="fetchData">Получить данные с backend</button>
-        <div v-if="data">{{ data }}</div>
-    </div>
+  <div>
+    <button @click="loadData">Получить данные с backend</button>
+    <div v-if="dataLoaded" style="background-color: lightgray">{{content}}</div>
+  </div>
 </template>
 
 <script>
 export default {
   data() {
     return {
-      data: null
+      content: [],
+      dataLoaded: false
     }
   },
+  mounted() {
+    // Добавляем обработчик события beforeunload при загрузке компонента
+    window.onbeforeunload = this.handleBeforeUnload;
+    // Загружаем данные при первой загрузке компонента
+    this.loadData();
+  },
+  beforeDestroy() {
+    // Удаляем обработчик события beforeunload при удалении компонента
+    window.onbeforeunload = null;
+  },
   methods: {
-    async fetchData() {
-    //   const tokenData = {
-    // "refresh": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTcxMTU1MjY4NSwianRpIjoiMzNmNzE3MTA4OGFlNGZiOGIwNTc3YTZkYmM5MGZiN2EiLCJ1c2VyX2lkIjoxfQ.23zZmSVGYyu3rEssA-2ykhB8BB0RpCMK9uTYEKbOFNw",
-    // "access": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzExNTUyNjg1LCJqdGkiOiI2ZmUzZDhmMDVlOWQ0MGNjOWZkZTc3MjkyNzA5NDVmZCIsInVzZXJfaWQiOjF9.TztjiW6v6dgj8TPDQK49ZcRZN_3U4Ke0lel70xdaUxc"
-    // };
-
+    // Метод для обработки события beforeunload
+    handleBeforeUnload(event) {
+      // Предотвращаем перезагрузку страницы только если данные еще не загружены
+      if (!this.dataLoaded) {
+        // Устанавливаем текст предупреждения
+        event.returnValue = '';
+      }
+    },
+    async loadData() {
       try {
-        const response = await this.$axios.get('/api/v1/bgjobs/'); 
-        console.log('Response News [0]:', response); 
-
-        
-        // const newsData = await response.data;
-        // this.data = newsData;
-        // const response2 = await this.$axios.get('/api/v1/bgjobs/'); 
-        // console.log('Response BgJobs:', response2);
-
-        // const response3 = await this.$axios.get('/api/v1/news_analysis/'); 
-        // console.log('Response News Analysis.data:', response3.data[0]);
-        // console.log('Data:', newsData); 
-        // console.error('Failed to fetch data:', response.status);
-          // Обработка ошибки, например, отображение сообщения пользователю
-        
+        const response = await this.$axios.get('/api/v1/chat/');
+        this.content = response.data;
+        this.dataLoaded = true;
+        console.log('Content: ', this.content);
       } catch (error) {
-        console.error('Error:', error);
-        // Обработка других ошибок, если они возникают
+        console.log('Error occured while fetching endpoint: ', error);
       }
     }
   }

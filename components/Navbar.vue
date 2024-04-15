@@ -10,32 +10,32 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
+            <li class="nav-item" :class="{ 'active': currentRoute === '/upload'}">
                 <nuxt-link class="nav-link" to="/upload">
                 Upload files
                 </nuxt-link>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" :class="{ 'active': currentRoute === '/chats'}">
                 <nuxt-link class="nav-link" to="/chats">
                 Chats
                 </nuxt-link>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" :class="{ 'active': currentRoute === '/news_upload'}">
                 <nuxt-link class="nav-link" to="/news_upload">
                 Upload news
                 </nuxt-link>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" :class="{ 'active': currentRoute === '/'}">
                 <nuxt-link class="nav-link" to="/">
                 Analyze news
                 </nuxt-link>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" :class="{ 'active': currentRoute === '/news_backtest'}">
                 <nuxt-link class="nav-link" to="/news_backtest">
                 Backtest News Analysis
                 </nuxt-link>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" :class="{ 'active': currentRoute === '/chat_analysis'}">
                 <nuxt-link class="nav-link" to="/chat_analysis">
                 Analyze chats
                 </nuxt-link>   
@@ -53,12 +53,6 @@
                 </a>
             </li>
         </ul>
-            <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Action</a></li>
-                <li><a class="dropdown-item" href="#">Another action</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="#">Something else here</a></li>
-            </ul>
         </div>
     </div>
     </nav>
@@ -69,6 +63,9 @@ export default {
     computed:{
         hasToken(){
             return this.$store.getters.hasToken
+        },
+        currentRoute() {
+            return this.$route.path; // Получаем текущий путь маршрута
         }
     },
     methods: {
@@ -80,10 +77,24 @@ export default {
 }
 </script>
 
-<style>
-
-
-.navbar-nav .nav-item {
-    margin-right: 30px; /* Добавить отступ между элементами меню */
+<style scoped>
+/* Стили для подсветки активного элемента */
+.nav-item.active .nav-link{
+    position: relative;
 }
+.nav-item.active .nav-link::after{
+    content: '';
+    position: absolute;
+    bottom: -20px; /*расположение дуги подсветки над дном навбара*/
+    left: 10%;
+    width: 80%;
+    height: 20px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    filter: blur(4px);
+    z-index: 1; /*для отображения поверх других эл-тов*/
+    transition: right 0.8s ease; /* Добавляем анимацию для свойства left */
+}
+
+
 </style>

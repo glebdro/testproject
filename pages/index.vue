@@ -5,17 +5,18 @@
         <!-- <div v-if="!hasToken" class="alert alert-danger mb-3">
             Need login first
         </div> -->
+        <div v-if="loading" class="loader"></div>
         <div v-if="dataLoaded" class="p-4 p-md-5 mb-4 rounded text-body-emphasis bg-body-secondary">
             <div v-if="!showData" class="row">
-                <div v-for="(item, index) in content" :key="index" class="row">
+                <div v-for="(item, index) in content" :key="index" class="row newsblock">
                     <!-- 1st section high-left -->
-                    <div class="col-lg-6" style="width: 65%">
+                    <div class="col-lg-6" style="width: 85%">
                         <h5 class="display-4 fst-italic">#{{item.id}}</h5>
-                        <h6 class="display-4 fst-italic">News Title:</h6>
-                        <p class="lead my-3">Company: {{item.company}}</p>
+                        <h6 class="display-4 fst-italic">{{item.news_title}}</h6>
+                        <p class="lead my-3 company-name-style" >Company: {{item.company_name}} [{{item.company_ticker}}]</p>
                     </div>
                     <!-- 2nd section high-right -->
-                    <div class="col-lg-6" style="width: 35%; background-color: darkgray; border-radius: 15px; display: flex; flex-direction: column; justify-content: center">
+                    <div class="col-lg-6" style="width: auto; height: 20%; margin-top: 30px; background-color: darkgray; border-radius: 10px; display: flex; flex-direction: column; justify-content: center">
                         <ul class="centered-list">
                             <li>GPT Short: {{item.gpt_short}}</li>
                             <li>GPT Type: {{item.gpt_type}}</li>
@@ -32,6 +33,7 @@
                             </div>
                         </div>
                     </div>
+                    <br>
                 </div>
             </div>
             <!-- html which displayed only if primary button clicked -->
@@ -58,13 +60,16 @@ export default {
         return{
             content: [],
             dataLoaded: false,
+            loading: true,
             showData: false,
             detContent: []
         };
     },
     async mounted(){
         try {
+            await new Promise(resolve => setTimeout(resolve, 200));
             const response = await this.$axios.get('/api/v1/news_analysis/');
+            this.loading = false;
             this.content = response.data;
             this.dataLoaded = true;
             console.log('Main page content: ', this.content)
@@ -93,48 +98,94 @@ export default {
 }
 </script>
 
-<style>
-    .centered-list {
-        text-align: center;
-    }
+<style scoped>
+.row.newsblock{
+    margin-bottom: 90px; 
+    background-color: rgb(216, 216, 216); 
+    border-radius: 10px;
+}
+.company-name-style{
+    font-weight: bold; 
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Тень текста */
+}
+.centered-list {
+    text-align: center;
+    list-style-type: none;
+    padding: 0;
+}
 
-    .centered-list li {
-        font-size: 18px;
-        font-weight: bold;
-    }
-    .btn-primary {
-        /* color of text */
-        --bs-btn-color: #000;
-        /* border color */
-        --bs-btn-border-color: #3b8070;
-        /* static color */
-        --bs-btn-bg: #3b8070; 
-        /* color while hover */
-        --bs-btn-hover-bg: #4bb47f;
-        /* color while clicked */
-        --bs-btn-active-bg: #8aa59b;
-        /* border color while hover */
-        --bs-btn-hover-border-color: #919191;
-    }
+.centered-list li {
+    font-size: 18px;
+    font-weight: bold;
+}
+/* BUTTONS */
+.btn-primary {
+    background-color: #4b4b4b; 
+    color: #fff; 
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    transition: background-color 0.3s ease; /* плавный переход */
+    margin-bottom: 20px;
+}
 
-    .btn-secondary {
-        /* color of text */
-        --bs-btn-color: #000;
-        /* border color */
-        --bs-btn-border-color: #966969;
-        /* static color */
-        --bs-btn-bg: #966969; 
-        /* color while hover */
-        --bs-btn-hover-bg: #f35656;
-        /* color while clicked */
-        --bs-btn-active-bg: rgb(240, 162, 162);
-    }
-    .btn-info{
-        /* border color while hover */
-        --bs-btn-hover-border-color: #919191;
-        /* border color */
-        --bs-btn-border-color: #919191;
-        /* color while hover */
-        --bs-btn-hover-bg: #dadada;
-    }
+.btn-primary:hover {
+    background-color: #a0a0a0; 
+}
+
+.btn-primary:active {
+    background-color: #5f87c1; 
+}
+.btn-secondary{
+background-color: #aa5d5d; 
+color: #fff; 
+border: none;
+border-radius: 5px;
+padding: 10px 20px;
+transition: background-color 0.3s ease; /* плавный переход */
+margin-bottom: 20px;
+}
+
+.btn-secondary:hover {
+    background-color: #dd9d9d; 
+}
+
+.btn-secondary:active {
+    background-color: #ffcbcb; 
+}
+.btn-info{
+    /* border color while hover */
+    --bs-btn-hover-border-color: #919191;
+    /* border color */
+    --bs-btn-border-color: #919191;
+    /* color while hover */
+    --bs-btn-hover-bg: #dadada;
+}
+/* LOAD SPINNER */
+.loader {
+position: absolute;
+left: 50%;
+width: 50px;
+aspect-ratio: 1;
+border-radius: 50%;
+border: 8px solid #6f87b4;
+animation:
+l20-1 0.5s infinite linear alternate,
+l20-2 1.0s infinite linear;
+}
+@keyframes l20-1{
+    0%    {clip-path: polygon(50% 50%,0       0,  50%   0%,  50%    0%, 50%    0%, 50%    0%, 50%    0% )}
+    12.5% {clip-path: polygon(50% 50%,0       0,  50%   0%,  100%   0%, 100%   0%, 100%   0%, 100%   0% )}
+    25%   {clip-path: polygon(50% 50%,0       0,  50%   0%,  100%   0%, 100% 100%, 100% 100%, 100% 100% )}
+    50%   {clip-path: polygon(50% 50%,0       0,  50%   0%,  100%   0%, 100% 100%, 50%  100%, 0%   100% )}
+    62.5% {clip-path: polygon(50% 50%,100%    0, 100%   0%,  100%   0%, 100% 100%, 50%  100%, 0%   100% )}
+    75%   {clip-path: polygon(50% 50%,100% 100%, 100% 100%,  100% 100%, 100% 100%, 50%  100%, 0%   100% )}
+    100%  {clip-path: polygon(50% 50%,50%  100%,  50% 100%,   50% 100%,  50% 100%, 50%  100%, 0%   100% )}
+}
+@keyframes l20-2{ 
+    0%    {transform:scaleY(1)  rotate(0deg)}
+    49.99%{transform:scaleY(1)  rotate(135deg)}
+    50%   {transform:scaleY(-1) rotate(0deg)}
+    100%  {transform:scaleY(-1) rotate(-135deg)}
+}
 </style>
